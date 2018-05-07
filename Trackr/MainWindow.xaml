@@ -3,10 +3,175 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        
         xmlns:local="clr-namespace:Trackr"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        
+        Title="MainWindow" 
+        
+        Height="450" Width="800"
+        MinHeight="450" MinWidth="800"
+        MaxHeight="900" MaxWidth="1600"
+        
+        WindowStyle="None"
+        AllowsTransparency="True"
+        
+        ResizeMode="CanResizeWithGrip">
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="32"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Image Source="Assets/mountains.jpg"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Margin="-40"
+               Grid.RowSpan="2"
+               Grid.ColumnSpan="2">
+            <Image.Effect>
+                <BlurEffect Radius="50" RenderingBias="Quality"/>
+            </Image.Effect>
+        </Image>
+
+        <Grid Name="Titlebar" MouseDown="Titlebar_MouseDown" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="32"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Name="Title"
+                       Text="Trackr."
+                       Foreground="#66FFFFFF"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Margin="32,0,0,0"></TextBlock>
+
+            <Button Name="CloseBtn"
+                    Click="CloseBtn_Click"
+                    Grid.Column="100"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    BorderThickness="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="#66FFFFFF">
+                <iconPacks:PackIconMaterial Kind="WindowClose" />
+            </Button>
+            
+        </Grid>
+
+        <StackPanel Name="Sidebar"
+                    Grid.Row="1" 
+                    Margin="0,0,0,32">
+            
+            <Button Name="HomeBtn"
+                    Click="HomeBtn_Click"
+                    MouseEnter="SidebarBtn_MouseEnter"
+                    MouseLeave="SidebarBtn_MouseLeave"
+                    Grid.Column="100"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    BorderThickness="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Foreground="#66FFFFFF"
+                    Height="32" Width="32">
+                <iconPacks:PackIconMaterial Kind="HomeOutline" />
+            </Button>
+
+            <Button Name="IssuesBtn"
+                    Click="IssuesBtn_Click"
+                    MouseEnter="SidebarBtn_MouseEnter"
+                    MouseLeave="SidebarBtn_MouseLeave"
+                    Grid.Column="100"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    BorderThickness="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Foreground="#66FFFFFF"
+                    Height="32" Width="32">
+                <iconPacks:PackIconOcticons Kind="IssueOpened" />
+            </Button>
+
+            <Button Name="NewIssueBtn"
+                    Click="NewIssueBtn_Click"
+                    MouseEnter="SidebarBtn_MouseEnter"
+                    MouseLeave="SidebarBtn_MouseLeave"
+                    Grid.Column="100"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    BorderThickness="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Foreground="#66FFFFFF"
+                    Height="32" Width="32">
+                <iconPacks:PackIconEntypo Kind="NewMessage" />
+            </Button>
+        </StackPanel>
+        
+        <Grid Grid.Row="1" Background="#66FFFFFF" Margin="0,0,32,32" Grid.Column="1">
+            <TabControl Name="MainTabs"
+                        Background="{x:Null}"
+                        BorderBrush="{x:Null}"
+                        Margin="8">
+                
+                <TabItem Header="Home" Visibility="Collapsed">
+                    News!
+                </TabItem>
+
+                <TabItem Header="Issues" Visibility="Collapsed">
+                    <TextBlock Name="dbg"></TextBlock>
+                </TabItem>
+
+                <TabItem Header="AddIssue" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Title -->
+                        <TextBox Name="TicketTitle"
+                                 Grid.ColumnSpan="2"
+                                 Margin="2"
+                                 Padding="4"
+                                 Background="#66FFFFFF" 
+                                 VerticalContentAlignment="Center"></TextBox>
+                        
+                        <!-- Category selection -->
+                        <ComboBox Name="TicketCategory"
+                                  ItemsSource="{Binding Path=CollectionCategories}"
+                                  DisplayMemberPath="Name" SelectedValuePath="ID" 
+                                  Margin="2"
+                                  Background="#66FFFFFF"
+                                  Grid.Row="1"/>
+                        
+                        <!-- Tags -->
+                        <TextBox Name="TicketTags"
+                                 Grid.Column="1" Grid.Row="1"
+                                 Margin="2"
+                                 Padding="4"
+                                 Background="#66FFFFFF"
+                                 VerticalContentAlignment="Center"></TextBox>
+
+                        <!-- Body -->
+                        <TextBox Name="TicketBody"
+                                 Grid.ColumnSpan="2"
+                                 Grid.Row="2"
+                                 Margin="2"
+                                 Padding="4"
+                                 Background="#66FFFFFF"></TextBox>
+
+                    </Grid>
+                </TabItem>
+                
+            </TabControl>
+        </Grid>
         
     </Grid>
 </Window>
