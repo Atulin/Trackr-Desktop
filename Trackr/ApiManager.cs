@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,22 +15,27 @@ namespace Trackr
 {
     public static class ApiManager
     {
-        public static string categories = "http://erronisgames.com/tracker/api/categories.php";
-        public static string news       = "http://erronisgames.com/tracker/api/news.php";
-        public static string issues     = "http://erronisgames.com/tracker/api/issues.php";
-        public static string newTicket  = "http://erronisgames.com/tracker/api/ticket.php";
-        public static string register   = "http://erronisgames.com/tracker/api/register.php";
-        public static string login      = "http://erronisgames.com/tracker/api/login.php";
+        public static string _categories = "http://erronisgames.com/tracker/api/categories.php";
+        public static string _news       = "http://erronisgames.com/tracker/api/news.php";
+        public static string _issues     = "http://erronisgames.com/tracker/api/issues.php";
+        public static string _newTicket  = "http://erronisgames.com/tracker/api/ticket.php";
+        public static string _register   = "http://erronisgames.com/tracker/api/register.php";
+        public static string _login      = "http://erronisgames.com/tracker/api/login.php";
 
         // Get categories
         public static Dictionary<string, string> GetCategories()
         {
-            var json = new WebClient().DownloadString(categories);
+            var json = new WebClient().DownloadString(_categories);
             var cats = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
 
             return cats;
         }
     }
+
+
+    //==================
+    // Issues
+    //==================
 
     public class Issue
     {
@@ -54,7 +62,82 @@ namespace Trackr
             Author = author;
             Developer = developer;
         }
+
+        // Send credentials
+        public static string SendTicket(string token, string category, string title, string body)
+        {
+            var client = new RestClient(ApiManager._newTicket);
+
+            var request = new RestRequest("resource/{id}", Method.POST);
+            request.AddParameter("token", token);
+            request.AddParameter("cat", category);
+            request.AddParameter("title", title);
+            request.AddParameter("body", body);
+
+            IRestResponse response = client.Execute(request);
+            var content = response.Content; // raw content as string
+
+            return content;
+        }
     }
+
+
+    //=====================
+    // Credentials
+    //=====================
+
+    public class Credentials
+    {
+        [JsonProperty("login")]
+        public string Login { get; set; }
+
+        [JsonProperty("pass")]
+        public string Password { get; set; }
+
+        // Send credentials
+        public static string SendCredentials(string login, string password)
+        {
+            var client = new RestClient(ApiManager._login);
+
+            var request = new RestRequest("resource/{id}", Method.POST);
+            request.AddParameter("login", login);
+            request.AddParameter("password", password);
+
+            IRestResponse response = client.Execute(request);
+            var content = response.Content; // raw content as string
+
+            return content;
+        }
+    }
+
+
+    //=====================
+    // Registration data
+    //=====================
+    public class Registration
+    {
+        // Send credentials
+        public static string SendCredentialsAsync(string login, string password, string email)
+        {
+            var client = new RestClient(ApiManager._register);
+
+            var request = new RestRequest("resource/{id}", Method.POST);
+            request.AddParameter("login", login);
+            request.AddParameter("password", password);
+            request.AddParameter("email", email);
+
+            IRestResponse response = client.Execute(request);
+            var content = response.Content; // raw content as string
+
+            return content;
+        }
+
+    }
+
+
+    //===========
+    // Categories
+    //===========
 
     public class Category : INotifyPropertyChanged
     {

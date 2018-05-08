@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Trackr;
 
 namespace Trackr
 {
@@ -26,26 +28,35 @@ namespace Trackr
         public Dictionary<string, string> DictCategories;
 
         // Hold categories collection
-        public ObservableCollection<Category> CollectionCategories = new ObservableCollection<Category>();
+        public ObservableCollection<Category> CollectionCategories { get; set; }
+
+        // Hold user token
+        public string Token = "";
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = this;
 
             // Load categories to dictionary
             Dictionary<string, string> cats = ApiManager.GetCategories();
             DictCategories = cats;
 
             // Load categories to ObservableCollection
-            foreach(var cat in DictCategories)
+            ObservableCollection<Category> Occ = new ObservableCollection<Category>();
+
+            foreach (var cat in DictCategories)
             {
                 Category newCat = new Category();
                 newCat.ID = Int32.Parse(cat.Key);
                 newCat.Name = cat.Value;
                 newCat.Description = "";
 
-                CollectionCategories.Add(newCat);
+                Occ.Add(newCat);
             }
+
+            CollectionCategories = Occ;
         }
 
         // Handle app close
@@ -91,13 +102,75 @@ namespace Trackr
         private void SidebarBtn_MouseEnter(object sender, MouseEventArgs e)
         {
             Button btn = sender as Button;
-            Title.Text = btn.Name.TrimToSentence();
+            WindowTitle.Text = btn.Name.TrimToSentence();
         }
 
         // Handle sidebar buttons' mouse leave
         private void SidebarBtn_MouseLeave(object sender, MouseEventArgs e)
         {
-            Title.Text = "Trackr.";
+            WindowTitle.Text = "Trackr.";
+        }
+
+        // Handle login window close
+        private void LoginWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LoginWindow.Visibility = Visibility.Collapsed;
+        }
+
+        // Handle login
+        private void LoginAccept_Click(object sender, RoutedEventArgs e)
+        {
+            string token = Credentials.SendCredentials(LoginLogin.Text, LoginPassword.Password);
+
+            try
+            {
+                Token = JsonConvert.DeserializeObject<Dictionary<string, string>>(token)["token"];
+            }
+            catch { }
+
+            if(Token != "")
+                UsernameTxt.Text = LoginLogin.Text;
+        }
+
+        // Open login window
+        private void LoginBtn_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow.Visibility = Visibility.Visible;
+        }
+
+        // Handle send ticket
+        private void SendTicketBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(Token != "" && TicketCategory.Text != "" && TicketTitle.Text !="" && TicketBody.Text != "")
+            {
+                string response = Issue.SendTicket(Token, TicketCategory.Text, TicketTitle.Text, TicketBody.Text);
+
+                WindowTitle.Text = TicketCategory.Text;
+            }
+            else
+            {
+                TicketBody.Text = "Don't leave me empty!";
+            }
+
+        }
+
+        // Handle register close
+        private void RegisterWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RegisterWindow.Visibility = Visibility.Collapsed;
+        }
+
+        // Handle register
+        private void RegisterAccept_Click(object sender, RoutedEventArgs e)
+        {
+            string response = Registration.SendCredentialsAsync(RegisterLogin.Text, RegisterPassword.Password, RegisterEmail.Text);
+        }
+
+        // Open registration panel
+        private void OpenRegister_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow.Visibility = Visibility.Visible;
+            LoginWindow.Visibility = Visibility.Collapsed;
         }
     }
    

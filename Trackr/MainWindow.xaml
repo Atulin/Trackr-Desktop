@@ -47,7 +47,7 @@
                 <ColumnDefinition Width="32"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Name="Title"
+            <TextBlock Name="WindowTitle"
                        Text="Trackr."
                        Foreground="#66FFFFFF"
                        FontSize="22"
@@ -62,7 +62,22 @@
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="#66FFFFFF">
                 <iconPacks:PackIconMaterial Kind="WindowClose" />
             </Button>
-            
+
+            <Button Name="LoginBtn"
+                    Click="LoginBtn_Click"
+                    Grid.Column="100"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                    BorderThickness="0"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="#66FFFFFF" Margin="-32,0,32,0">
+                <iconPacks:PackIconFontAwesome Kind="UserCircleRegular" />
+            </Button>
+
+            <TextBlock Name="UsernameTxt"
+                       HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Margin="0,0,34,0"
+                       FontSize="14"
+                       Foreground="#66FFFFFF"></TextBlock>
+
         </Grid>
 
         <StackPanel Name="Sidebar"
@@ -128,6 +143,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition Width="64"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="32"/>
@@ -141,7 +157,8 @@
                                  Margin="2"
                                  Padding="4"
                                  Background="#66FFFFFF" 
-                                 VerticalContentAlignment="Center"></TextBox>
+                                 VerticalContentAlignment="Center">
+                        </TextBox>
                         
                         <!-- Category selection -->
                         <ComboBox Name="TicketCategory"
@@ -161,17 +178,124 @@
 
                         <!-- Body -->
                         <TextBox Name="TicketBody"
-                                 Grid.ColumnSpan="2"
+                                 Grid.ColumnSpan="5"
                                  Grid.Row="2"
                                  Margin="2"
                                  Padding="4"
-                                 Background="#66FFFFFF"></TextBox>
+                                 Background="#66FFFFFF"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"></TextBox>
+
+                        <!-- Send button -->
+                        <Button Name="SendTicketBtn"
+                                Click="SendTicketBtn_Click"
+                                MouseEnter="SidebarBtn_MouseEnter"
+                                MouseLeave="SidebarBtn_MouseLeave"
+                                Grid.Column="3"
+                                Grid.RowSpan="2"
+                                Height="60" Width="60"
+                                Background="#FFCA6969">
+                            
+                            <iconPacks:PackIconMaterial Kind="Send"
+                                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
+                                                        Height="24" Width="24" Foreground="#99000000" Margin="5,0,0,0"/>
+                            
+                            <Button.Template >
+                                <ControlTemplate TargetType="Button" >
+                                    <Grid >
+                                        <Path Stretch="Uniform" UseLayoutRounding="False" Fill="#66FFFFFF">
+                                            <Path.Data>
+                                                <EllipseGeometry RadiusX="1" RadiusY="1"/>
+                                            </Path.Data>
+                                        </Path>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                     </Grid>
                 </TabItem>
                 
             </TabControl>
         </Grid>
-        
+
+        <!-- Login window -->
+        <Grid Name="LoginWindow"
+              MouseDown="LoginWindow_MouseDown"
+              Grid.RowSpan="3"
+              Grid.ColumnSpan="3"
+              Background="#66FFFFFF"
+              Visibility="Collapsed">
+            
+            <Grid Width="300" Height="150" Background="#66FFFFFF">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Margin="4" Padding="4" Grid.Row="1" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Login</Label>
+                <TextBox Name="LoginLogin" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center"></TextBox>
+
+                <Label Margin="4" Padding="4" Grid.Row="2" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Password</Label>
+                <PasswordBox Name="LoginPassword" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center"></PasswordBox>
+
+                <Button Name="OpenRegister" Click="OpenRegister_Click" Grid.Row="3" Grid.Column="0" Margin="4" Background="#66FFFFFF" Foreground="#FF515151">Register</Button>
+                
+                <Button Name="LoginAccept" Click="LoginAccept_Click" Grid.Row="3" Grid.Column="2" Margin="4" Background="#66FFFFFF" Foreground="#FF515151">Login</Button>
+
+            </Grid>
+            
+        </Grid>
+
+        <!-- Register window -->
+        <Grid Name="RegisterWindow"
+              MouseDown="RegisterWindow_MouseDown"
+              Grid.RowSpan="3"
+              Grid.ColumnSpan="3"
+              Background="#66FFFFFF"
+              Visibility="Collapsed">
+
+            <Grid Width="300" Height="220" Background="#66FFFFFF">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition Height="36px"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Margin="4" Padding="4" Grid.Row="1" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Login</Label>
+                <TextBox Name="RegisterLogin" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center"></TextBox>
+
+                <Label Margin="4" Padding="4" Grid.Row="2" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Email</Label>
+                <TextBox Name="RegisterEmail" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center"></TextBox>
+
+                <Label Margin="4" Padding="4" Grid.Row="3" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Password</Label>
+                <PasswordBox Name="RegisterPassword" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center"></PasswordBox>
+
+                <Label Margin="4" Padding="4" Grid.Row="4" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="#FF515151">Repeat</Label>
+                <PasswordBox Name="RegisterPassword2" Margin="4" Padding="4" Background="#66FFFFFF" Foreground="#FF515151" Grid.Row="4" Grid.Column="1" VerticalContentAlignment="Center"></PasswordBox>
+                
+                <Button Name="RegisterAccept" Click="RegisterAccept_Click" Grid.Row="5" Grid.ColumnSpan="2" Margin="4" Background="#66FFFFFF" Foreground="#FF515151">Register</Button>
+
+            </Grid>
+
+        </Grid>
+
     </Grid>
 </Window>
